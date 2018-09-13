@@ -1,0 +1,857 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+        <link rel="canonical" href="https://flystarhe.github.io/pyhej/cnns/rcnn/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="复制">
+      
+        <meta name="lang:clipboard.copied" content="已复制">
+      
+        <meta name="lang:search.language" content="en, jp">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="没有找到符合条件的结果">
+      
+        <meta name="lang:search.result.one" content="找到 1 个符合条件的结果">
+      
+        <meta name="lang:search.result.other" content="# 个符合条件的结果">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-\.]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-2.7.1">
+    
+    
+      
+        <title>RCNN算法详解 - PyHej</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.78aab2dc.css">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <a href="#rcnn" tabindex="1" class="md-skip">
+        跳转至
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://flystarhe.github.io/pyhej" title="PyHej" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                PyHej
+              </span>
+              <span class="md-header-nav__topic">
+                RCNN算法详解
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            键入以开始搜索
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/flystarhe/pyhej/" title="前往 Github 仓库" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      flystarhe/pyhej
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </span>
+    PyHej
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/flystarhe/pyhej/" title="前往 Github 仓库" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      flystarhe/pyhej
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Cnns
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Cnns
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../models/" title="Models" class="md-nav__link">
+      Models
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../object_detection/" title="深度学习目标检测模型全面综述" class="md-nav__link">
+      深度学习目标检测模型全面综述
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../object_masking/" title="Semantic Segmentation" class="md-nav__link">
+      Semantic Segmentation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        RCNN算法详解
+      </label>
+    
+    <a href="./" title="RCNN算法详解" class="md-nav__link md-nav__link--active">
+      RCNN算法详解
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" title="流程" class="md-nav__link">
+    流程
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" title="候选区域生成" class="md-nav__link">
+    候选区域生成
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" title="特征提取" class="md-nav__link">
+    特征提取
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" title="预训练" class="md-nav__link">
+    预训练
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" title="调优训练" class="md-nav__link">
+    调优训练
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" title="类别判断" class="md-nav__link">
+    类别判断
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" title="位置精修" class="md-nav__link">
+    位置精修
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fast-rcnn" title="Fast RCNN" class="md-nav__link">
+    Fast RCNN
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" title="特征提取" class="md-nav__link">
+    特征提取
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#roi_poolforward" title="roi_pool层的测试(forward)" class="md-nav__link">
+    roi_pool层的测试(forward)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" title="网络参数训练" class="md-nav__link">
+    网络参数训练
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" title="分类与位置调整" class="md-nav__link">
+    分类与位置调整
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faster-rcnn" title="Faster RCNN" class="md-nav__link">
+    Faster RCNN
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" title="区域生成网络:结构" class="md-nav__link">
+    区域生成网络:结构
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" title="区域生成网络:训练" class="md-nav__link">
+    区域生成网络:训练
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" title="流程" class="md-nav__link">
+    流程
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" title="候选区域生成" class="md-nav__link">
+    候选区域生成
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" title="特征提取" class="md-nav__link">
+    特征提取
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" title="预训练" class="md-nav__link">
+    预训练
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" title="调优训练" class="md-nav__link">
+    调优训练
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" title="类别判断" class="md-nav__link">
+    类别判断
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" title="位置精修" class="md-nav__link">
+    位置精修
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fast-rcnn" title="Fast RCNN" class="md-nav__link">
+    Fast RCNN
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" title="特征提取" class="md-nav__link">
+    特征提取
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#roi_poolforward" title="roi_pool层的测试(forward)" class="md-nav__link">
+    roi_pool层的测试(forward)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" title="网络参数训练" class="md-nav__link">
+    网络参数训练
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" title="分类与位置调整" class="md-nav__link">
+    分类与位置调整
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faster-rcnn" title="Faster RCNN" class="md-nav__link">
+    Faster RCNN
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" title="区域生成网络:结构" class="md-nav__link">
+    区域生成网络:结构
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" title="区域生成网络:训练" class="md-nav__link">
+    区域生成网络:训练
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/flystarhe/pyhej/edit/master/docs/cnns/rcnn.md" title="编辑此页" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="rcnn">RCNN算法详解<a class="headerlink" href="#rcnn" title="Permanent link">&para;</a></h1>
+<p>Region CNN(RCNN)可以说是利用深度学习进行目标检测的开山之作.作者Ross Girshick多次在PASCAL VOC的目标检测竞赛中摘桂,2010年更带领团队获得终身成就奖.</p>
+<p>目标检测中的两个关键问题:</p>
+<ol>
+<li>速度:经典的目标检测算法使用滑动窗法依次判断所有可能的区域.本文则预先提取一系列较可能是物体的候选区域,之后仅在这些候选区域上提取特征,进行判断</li>
+<li>训练集:一个较大的识别库(ImageNet ILSVC 2012),标定每张图片中物体的类别,一千万图像,1000类;一个较小的检测库(PASCAL VOC 2007),标定每张图片中,物体的类别和位置,一万图像,20类</li>
+</ol>
+<h2 id="_1">流程<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ol>
+<li>一张图像生成<code>1K~2K</code>个候选区域</li>
+<li>对每个候选区域,使用深度网络提取特征</li>
+<li>特征送入每一类的SVM分类器,判别是否属于该类</li>
+<li>使用回归器精细修正候选框位置</li>
+</ol>
+<p><img alt="" src="../rcnn01.jpg" /></p>
+<h3 id="_2">候选区域生成<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>使用了Selective Search方法从一张图像生成约<code>2000-3000</code>个候选区域.基本思路如下:</p>
+<ol>
+<li>使用一种过分割手段,将图像分割成小区域</li>
+<li>查看现有小区域,合并可能性最高的两个区域.重复直到整张图像合并成一个区域</li>
+<li>输出所有曾经存在过的区域,所谓候选区域</li>
+</ol>
+<p>候选区域生成和后续步骤相对独立,实际可以使用任意算法进行.</p>
+<p>合并规则:</p>
+<ol>
+<li>颜色(颜色直方图)相近的</li>
+<li>纹理(梯度直方图)相近的</li>
+<li>合并后总面积小的</li>
+<li>合并后总面积在其BBOX中所占比例大的</li>
+</ol>
+<p>第3条保证合并操作的尺度较为均匀,避免一个大区域陆续<code>吃掉</code>其他小区域.第四条保证合并后形状规则.上述四条规则只涉及区域的颜色直方图,纹理直方图,面积和位置.合并后的区域特征可以直接由子区域特征计算而来,速度较快.</p>
+<h2 id="_3">特征提取<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>使用深度网络提取特征之前,首先把候选区域归一化成同一尺寸<code>227x227</code>.此处有一些细节可做变化:外扩的尺寸大小,形变时是否保持原比例,对框外区域直接截取还是补灰.</p>
+<h3 id="_4">预训练<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>网络借鉴Hinton 2012年在Image Net上的分类网络.提取的特征为4096维,之后送入一个<code>4096-&gt;1000</code>的全连接<code>fc</code>层进行分类,学习率0.01.训练数据使用ILVCR 2012的全部数据进行训练,输入一张图片,输出1000维的类别标号.</p>
+<h3 id="_5">调优训练<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>同样使用上述网络,最后一层换成<code>4096-&gt;21</code>的全连接网络.学习率0.001,每一个batch包含32个正样本(属于20类)和96个背景.训练数据使用PASCAL VOC 2007的训练集,输入一张图片,输出21维的类别标号,表示<code>20类+背景</code>.考察一个候选框和当前图像上所有标定框重叠面积最大的一个.如果重叠比例大于0.5,则认为此候选框为此标定的类别,否则认为此候选框为背景.</p>
+<h2 id="_6">类别判断<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<ol>
+<li>正样本:本类的真值标定框</li>
+<li>负样本:考察每一个候选框,如果和本类所有标定框的重叠都小于0.3,认定其为负样本</li>
+</ol>
+<h2 id="_7">位置精修<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>目标检测问题的衡量标准是重叠面积:许多看似准确的检测结果,往往因为候选框不够准确,重叠面积很小.故需要一个位置精修步骤:</p>
+<ol>
+<li>回归器:对每一类目标,使用一个线性回归器进行精修,正则项<code>λ=10000</code>.输入为深度网络的4096维特征,输出为xy方向的缩放和平移</li>
+<li>训练样本:判定为本类的候选框中和真值重叠面积大于0.6的候选框</li>
+</ol>
+<h2 id="fast-rcnn">Fast RCNN<a class="headerlink" href="#fast-rcnn" title="Permanent link">&para;</a></h2>
+<p>继2014年的RCNN之后,Ross Girshick在15年推出Fast RCNN,构思精巧,流程更为紧凑,大幅提升了目标检测的速度.</p>
+<p>RCNN使用以下四步实现目标检测:</p>
+<ol>
+<li>在图像中确定约<code>1000-2000</code>个候选框</li>
+<li>对于每个候选框内图像块使用深度网络提取特征</li>
+<li>对候选框中提取出的特征使用分类器判别是否属于一个特定类</li>
+<li>对于属于某一特征的候选框用回归器进一步调整其位置</li>
+</ol>
+<p>改进的Fast RCNN:</p>
+<ol>
+<li>测试时速度慢:RCNN一张图像内候选框之间大量重叠,提取特征操作冗余;Fast RCNN将整张图像归一化后直接送入深度网络,在邻接时,才加入候选框信息,在末尾的少数几层处理每个候选框</li>
+<li>训练时速度慢:RCNN一张图像内候选框之间大量重叠,提取特征操作冗余;Fast RCNN将一张图像送入网络,紧接着送入从这幅图像上提取出的候选区域,这些候选区域的前几层特征不需要再重复计算</li>
+<li>训练所需空间大:RCNN中独立的分类器和回归器需要大量特征作为训练样本;Fast RCNN把类别判断和位置精调统一用深度网络实现,不再需要额外存储</li>
+</ol>
+<h3 id="_8">特征提取<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>图像归一化为<code>224×224</code>直接送入网络,前五阶段是基础的<code>conv+relu+pooling</code>形式,在第五阶段结尾输入P个候选区域<code>(图像序号×1+几何位置×4)</code>.</p>
+<p><img alt="" src="../rcnn02.jpg" /></p>
+<h4 id="roi_poolforward">roi_pool层的测试(forward)<a class="headerlink" href="#roi_poolforward" title="Permanent link">&para;</a></h4>
+<p>roi_pool层将每个候选区域均匀分成<code>M×N</code>块,对每块进行max pooling.将特征图上大小不一的候选区域转变为大小统一的数据,送入下一层.</p>
+<p><img alt="" src="../rcnn03.jpg" /></p>
+<h3 id="_9">网络参数训练<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>网络除去末尾部分如下图,在ImageNet上训练1000类分类器.结果参数作为相应层的初始化参数:</p>
+<p><img alt="" src="../rcnn04.jpg" /></p>
+<p>其余参数随机初始化.</p>
+<p>在调优训练时,每一个mini-batch中首先加入N张完整图片,而后加入从N张图片中选取的R个候选框.这R个候选框可以复用N张图片前5个阶段的网络特征.实际选择<code>N=2,R=128</code>.</p>
+<p>训练数据N张完整图片以50%概率水平翻转,R个候选框的构成方式:</p>
+<ul>
+<li>前景:25%,与某个真值重叠在<code>[0.5,1]</code>的候选框</li>
+<li>背景:75%,与真值重叠的最大值在<code>[0.1,0.5)</code>的候选框</li>
+</ul>
+<h3 id="_10">分类与位置调整<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>第五阶段的特征输入到两个并行的全连层中(multi-task):</p>
+<p><img alt="" src="../rcnn05.jpg" /></p>
+<p><code>cls_score</code>层用于分类,输出<code>K+1</code>维数组p,表示属于K类和背景的概率.<code>bbox_pred</code>层用于调整候选区域位置,输出<code>4xK</code>维数组t,表示分别属于K类时,应该平移缩放的参数.</p>
+<h2 id="faster-rcnn">Faster RCNN<a class="headerlink" href="#faster-rcnn" title="Permanent link">&para;</a></h2>
+<p>从RCNN到fast RCNN,再到faster RCNN,目标检测的四个基本步骤<code>候选区域生成,特征提取,分类,位置精修</code>终于被统一到一个深度网络框架之内.所有计算没有重复,完全在GPU中完成,大大提高了运行速度.</p>
+<p>faster RCNN可以简单地看做<code>区域生成网络+fast RCNN</code>的系统,用区域生成网络代替fast RCNN中的Selective Search方法.这个系统中的三个问题:</p>
+<ol>
+<li>如何设计区域生成网络</li>
+<li>如何训练区域生成网络</li>
+<li>如何让区域生成网络和fast RCNN网络共享特征提取网络</li>
+</ol>
+<h3 id="_11">区域生成网络:结构<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>基本设想是在提取好的特征图上对所有可能的候选框进行判别.由于后续还有位置精修步骤,所以候选框实际比较稀疏.</p>
+<p><img alt="" src="../rcnn06.jpg" /></p>
+<p>原始特征提取(上图灰色方框)包含若干层<code>conv+relu</code>,直接套用ImageNet上常见的分类网络即可.
+额外添加一个<code>conv+relu</code>层,输出<code>51x39x256</code>维特征.</p>
+<p>特征可以看做一个尺度<code>51x39</code>的256通道图像,对于该图像的每一个位置,考虑9个可能的候选窗口<code>三种面积{128^2,256^2,512^2}x三种比例{1:1,1:2,2:1}</code>.这些候选窗口称为anchors.下图示出<code>51x39</code>个anchor中心,以及9种anchor示例:</p>
+<p><img alt="" src="../rcnn07.jpg" /></p>
+<p>分类层<code>cls_score</code>输出每一个位置上9个anchor属于前景和背景的概率,窗口回归层<code>bbox_pred</code>输出每一个位置上9个anchor对应窗口应该平移缩放的参数.对于每一个位置来说,分类层从256维特征中输出属于前景和背景的概率,窗口回归层从256维特征中输出4个平移缩放参数.</p>
+<p>就局部来说,这两层是全连接网络;就全局来说,由于网络在所有位置<code>51x39个</code>的参数相同,所以实际用尺寸为<code>1×1</code>的卷积网络实现.</p>
+<p>实际代码中,将<code>51x39x9</code>个候选位置根据得分排序,选择最高的一部分,再经过Non-Maximum Suppression获得2000个候选结果之后才送入分类器和回归器.所以Faster-RCNN和RCNN,Fast-RCNN一样属于2-stage的检测算法.</p>
+<h3 id="_12">区域生成网络:训练<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>考察训练集中的每张图像:</p>
+<ol>
+<li>对每个标定的真值候选区域,与其重叠比例最大的anchor记为前景样本</li>
+<li>对<code>[1]</code>剩余的anchor,如果其与某个标定重叠比例大于0.7,记为前景样本;如果其与任意一个标定的重叠比例都小于0.3,记为背景样本</li>
+<li>对<code>[1],[2]</code>剩余的anchor弃去不用</li>
+<li>跨越图像边界的anchor弃去不用</li>
+</ol>
+<p>原始特征提取网络使用ImageNet的分类样本初始化,其余新增层随机初始化.每个mini-batch包含从一张图像中提取的256个anchor,前景背景样本<code>1:1</code>.前60K迭代,学习率0.001,后20K迭代,学习率0.0001.
+momentum设置为0.9,weight decay设置为0.0005.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../object_masking/" title="Semantic Segmentation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  后退
+                </span>
+                Semantic Segmentation
+              </span>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.8eb9be28.js"></script>
+      
+        
+        
+          
+          <script src="../../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          
+            
+          
+            
+              
+                <script src="../../assets/javascripts/lunr/tinyseg.js"></script>
+              
+              
+                <script src="../../assets/javascripts/lunr/lunr.jp.js"></script>
+              
+            
+          
+          
+            <script src="../../assets/javascripts/lunr/lunr.multi.js"></script>
+          
+        
+      
+      <script>app.initialize({version:"0.17.3",url:{base:"../.."}})</script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

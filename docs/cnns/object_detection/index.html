@@ -1,0 +1,701 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+        <link rel="canonical" href="https://flystarhe.github.io/pyhej/cnns/object_detection/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="复制">
+      
+        <meta name="lang:clipboard.copied" content="已复制">
+      
+        <meta name="lang:search.language" content="en, jp">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="没有找到符合条件的结果">
+      
+        <meta name="lang:search.result.one" content="找到 1 个符合条件的结果">
+      
+        <meta name="lang:search.result.other" content="# 个符合条件的结果">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-\.]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-2.7.1">
+    
+    
+      
+        <title>深度学习目标检测模型全面综述 - PyHej</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.78aab2dc.css">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <a href="#_1" tabindex="1" class="md-skip">
+        跳转至
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://flystarhe.github.io/pyhej" title="PyHej" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                PyHej
+              </span>
+              <span class="md-header-nav__topic">
+                深度学习目标检测模型全面综述
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            键入以开始搜索
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/flystarhe/pyhej/" title="前往 Github 仓库" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      flystarhe/pyhej
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </span>
+    PyHej
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/flystarhe/pyhej/" title="前往 Github 仓库" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      flystarhe/pyhej
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Cnns
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Cnns
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../models/" title="Models" class="md-nav__link">
+      Models
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        深度学习目标检测模型全面综述
+      </label>
+    
+    <a href="./" title="深度学习目标检测模型全面综述" class="md-nav__link md-nav__link--active">
+      深度学习目标检测模型全面综述
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#faster-r-cnn" title="FASTER R-CNN" class="md-nav__link">
+    FASTER R-CNN
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-cnn" title="R-CNN" class="md-nav__link">
+    R-CNN
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fast-r-cnn" title="Fast R-CNN" class="md-nav__link">
+    Fast R-CNN
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faster-r-cnn_1" title="FASTER R-CNN" class="md-nav__link">
+    FASTER R-CNN
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#r-fcn" title="R-FCN" class="md-nav__link">
+    R-FCN
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssd" title="SSD" class="md-nav__link">
+    SSD
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" title="结论" class="md-nav__link">
+    结论
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../object_masking/" title="Object masking" class="md-nav__link">
+      Object masking
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../rcnn/" title="Rcnn" class="md-nav__link">
+      Rcnn
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#faster-r-cnn" title="FASTER R-CNN" class="md-nav__link">
+    FASTER R-CNN
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-cnn" title="R-CNN" class="md-nav__link">
+    R-CNN
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fast-r-cnn" title="Fast R-CNN" class="md-nav__link">
+    Fast R-CNN
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faster-r-cnn_1" title="FASTER R-CNN" class="md-nav__link">
+    FASTER R-CNN
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#r-fcn" title="R-FCN" class="md-nav__link">
+    R-FCN
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssd" title="SSD" class="md-nav__link">
+    SSD
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" title="结论" class="md-nav__link">
+    结论
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/flystarhe/pyhej/edit/master/docs/cnns/object_detection.md" title="编辑此页" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="_1">深度学习目标检测模型全面综述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<ul>
+<li>date: 2017-09-18</li>
+<li>tags: Faster R-CNN, R-FCN, SSD</li>
+</ul>
+<p>Faster R-CNN,R-FCN和SSD是三种目前最优且应用最广泛的目标检测模型,其他流行的模型通常与这三者类似.本文介绍了深度学习目标检测的三种常见模型:Faster R-CNN,R-FCN和SSD.</p>
+<p><img alt="" src="../object_detection01.png" /></p>
+<p>随着自动驾驶汽车,智能监控摄像头,面部识别以及大量对人有价值的应用出现.快速,精准的目标检测系统市场也日益蓬勃.这些系统除了可以对图像中的每个目标进行识别,分类以外,它们还可以通过在该目标周围绘制适当大小的边界框(bounding box)来对其进行定位.这让目标检测技术较传统计算机视觉处理技术(图像分类)而言,难度上升了不少.</p>
+<p>然而,幸运的是,目前最成功的目标检测方法是对图像分类模型的扩展.几个月前,Google为Tensorflow发布了一个新的目标检测API.与其同时发布的还有针对一些特定模型预构建的框架和权重:</p>
+<ul>
+<li>基于MobileNets框架的Single Shot Multibox Detector(SSD)模型</li>
+<li>基于Inception V2框架的SSD模型</li>
+<li>使用ResNet-101框架的基于Region的全卷积网络(R-FCN)模型</li>
+<li>基于ResNet-101框架的Faster RCNN模型</li>
+<li>基于Inception ResNet v2的Faster RCNN模型</li>
+</ul>
+<h2 id="faster-r-cnn">FASTER R-CNN<a class="headerlink" href="#faster-r-cnn" title="Permanent link">&para;</a></h2>
+<p>Faster R-CNN模型现在是一个典型的基于深度学习的目标检测模型.在它的启发下,出现了很多目标检测与分割模型,比如本文中我们将会看到的另外两个模型.然而,要真正开始了解Faster R-CNN之前,我们需要理解R-CNN和Fast R-CNN.</p>
+<h3 id="r-cnn">R-CNN<a class="headerlink" href="#r-cnn" title="Permanent link">&para;</a></h3>
+<p>R-CNN,或称Region-based Convolutional Neural Network,其工作包含了三个步骤:</p>
+<ul>
+<li>借助一个可以生成约2000个region proposal的选择性搜索(Selective Search)算法,R-CNN可以对输入图像进行扫描,来获取可能出现的目标</li>
+<li>在每个region proposal上都运行一个卷积神经网络(CNN)</li>
+<li>将每个CNN的输出都输入进:a)一个支持向量机,以对上述区域进行分类;b)一个线性回归器,以收缩目标周围的边界框,前提是这样的目标存在</li>
+</ul>
+<p><img alt="" src="../object_detection02.png" /></p>
+<p>换句话说,首先,我们给出一些建议区域;然后,从中提取出特征;之后,再根据这些特征来对这些区域进行分类.本质而言,我们将目标检测转化成了图像分类问题.R-CNN模型虽然非常直观,但是速度很慢.</p>
+<h3 id="fast-r-cnn">Fast R-CNN<a class="headerlink" href="#fast-r-cnn" title="Permanent link">&para;</a></h3>
+<p>直接承接R-CNN的是Fast R-CNN.Fast R-CNN在很多方面与R-CNN类似.但是凭借两项主要的增强手段,其检测速度较R-CNN有所提高:</p>
+<ul>
+<li>在推荐区域之前,先对图像执行特征提取工作,通过这种办法,后面只用对整个图像使用一个CNN(之前的R-CNN网络需要在2000个重叠的区域上分别运行2000个CNN)</li>
+<li>将支持向量机替换成了一个softmax层,这种变化并没有创建新的模型,而是将神经网络进行了扩展以用于预测工作</li>
+</ul>
+<p><img alt="" src="../object_detection03.png" /></p>
+<p>现在我们基于网络最后的特征图(而非原始图像)创建了region proposals.因此,我们对整幅图只用训练一个CNN就可以了.</p>
+<p>此外,我们使用了一个softmax层来直接输出类(class)的概率,而不是像之前一样训练很多不同的SVM去对每个目标类(object class)进行分类.现在,我们只用训练一个神经网络,而之前我们需要训练一个神经网络以及很多SVM.</p>
+<p>就速度而言,Fast R-CNN提升了许多.然而,存在一大未解决的瓶颈:用于生成region proposal的选择搜索算法(selective search algorithm).</p>
+<h3 id="faster-r-cnn_1">FASTER R-CNN<a class="headerlink" href="#faster-r-cnn_1" title="Permanent link">&para;</a></h3>
+<p>Faster R-CNN的主要创新是,它用一个快速神经网络代替了之前慢速的选择搜索算法(selective search algorithm).具体而言,它引入了一个region proposal网络(RPN).RPN工作原理:</p>
+<ul>
+<li>在最后卷积得到的特征图上,使用一个<code>3x3</code>的窗口在特征图上滑动,然后将其映射到一个更低的维度上(如256维)</li>
+<li>在每个滑动窗口的位置上,RPN都可以基于k个固定比例的anchor box(默认的边界框)生成多个可能的区域</li>
+<li>每个region proposal都由两部分组成:a)该区域的objectness分数;b)4个表征该区域边界框的坐标</li>
+</ul>
+<p>换句话说,我们会观察我们最后特征图上的每个位置,然后关注围绕它的k个不同的anchor box:一个高的框,一个宽的框,一个大的框等等.对于每个这些框,不管我们是否认为它包含一个目标,以及不管这个框里的坐标是什么,我们都会进行输出.下图展示了在单个滑动框位置上发生的操作:</p>
+<p><img alt="" src="../object_detection04.png" /></p>
+<p>图中2k分数代表了k中每一个边界框正好覆盖目标的softmax概率.这里注意到,尽管RPN输出了边界框的坐标,然而它并不会去对任何可能的目标进行分类:它惟一的工作仍然是给出对象区域.如果一个anchor box在特定阈值之上存在一个objectness分数,那么这个边界框的坐标就会作为一个region proposal被向前传递.</p>
+<p>一旦我们有了region proposal我们就直接把他们输入一个本质上是Fast R-CNN的模型.我们再添加一个池化层,一些全连接层以及最后,一个softmax分类层和边界框回归器(bounding box regressor).所以在某种意义上,<code>Faster R-CNN = RPN + Fast R-CNN</code>.</p>
+<p><img alt="" src="../object_detection05.png" /></p>
+<p>总体而言,Faster R-CNN较Fast R-CNN在速度上有了大幅提升,而且其精确性也达到了最尖端的水平.值得一提的是,尽管未来的模型能够在检测速度上有所提升,但是几乎没有模型的表现能显著超越Faster R-CNN.换句话说,Faster R-CNN也许不是目标检测最简单最快的方法,但是其表现还是目前最佳的.例如,Tensorflow应用Inception ResNet打造的Faster R-CNN就是他们速度最慢,但却最精准的模型.</p>
+<p>也许Faster R-CNN看起来可能会非常复杂,但是它的核心设计还是与最初的R-CNN一致:先假设对象区域,然后对其进行分类.目前,这是很多目标检测模型使用的主要思路,包括我们接下来将要提到的这个模型.</p>
+<h2 id="r-fcn">R-FCN<a class="headerlink" href="#r-fcn" title="Permanent link">&para;</a></h2>
+<p>还记得Fast R-CNN是如何通过在所有region proposal上共享同一个CNN来改善检测速度的吗?这也是设计R-FCN的一个动机:通过最大化共享计算来提升速度.</p>
+<p>R-FCN,或称Region-based Fully Convolutional Net(基于区域的全卷积网络),可以在每个输出之间完全共享计算.作为全卷积网络,它在模型设计过程中遇到了一个特殊的问题:</p>
+<ol>
+<li>当对一个目标进行分类任务时,我们希望学到模型中的位置不变性(location invariance),无论这只猫出现在图中的哪个位置,我们都想将它分类成一只猫</li>
+<li>当进行目标检测任务时,我们希望学习到位置可变性(location variance),如果这只猫在左上角,那么我们希望在图像左上角这个位置画一个框</li>
+</ol>
+<p>所以,问题出现了,如果想在网络中100%共享卷积计算的话,我们应该如何在位置不变性(location invariance)和位置可变性(location variance)之间做出权衡呢?R-FCN的解决方案:</p>
+<p>位置敏感分数图.每个位置敏感分数图都代表了一个目标类(object class)的一个相关位置.例如,只要是在图像右上角检测到一只猫,就会激活一个分数图(score map).而当系统看见左下角出现一辆车时,另一个分数图也将会被激活.本质上来讲,这些分数图都是卷积特征图,它们被训练来识别每个目标的特定部位.</p>
+<p>以下是R-FCN的工作方式:</p>
+<ul>
+<li>在输入图像上运行一个CNN</li>
+<li>添加一个全卷积层,以生成位置敏感分数图的score bank.这里应该有<code>k^2(C+1)</code>个分数图,其中<code>k^2</code>代表切分一个目标的相关位置的数量(比如,<code>3^2</code>代表一个<code>3x3</code>的空间网格),<code>C+1</code>代表<code>C</code>个类外加一个背景</li>
+<li>运行一个全卷积region proposal网络(RPN),以生成感兴趣区域(regions of interest, RoI)</li>
+<li>对于每个RoI,我们都将其切分成同样的<code>k^2</code>个子区域,然后将这些子区域作为分数图</li>
+<li>对每个子区域,我们检查其score bank,以判断这个子区域是否匹配具体目标的对应位置.比如,如果我们处在<code>上左</code>子区域,那我们就会获取与这个目标<code>上左</code>子区域对应的分数图,并且在感兴趣区域(RoI region)里对那些值取平均.对每个类我们都要进行这个过程</li>
+<li>一旦每个<code>k^2</code>子区域都具备每个类的目标匹配值,那么我们就可以对这些子区域求平均值,得到每个类的分数</li>
+<li>通过对剩下<code>C+1</code>个维度向量进行softmax回归,来对RoI进行分类</li>
+</ul>
+<p>下面是R-FCN的示意图,用RPN生成RoI:</p>
+<p><img alt="" src="../object_detection06.png" /></p>
+<p>当然,即便有上述文字以及图片的解释,你可能仍然不太明白这个模型的工作方式.老实说,当你可以实际看到R-FCN的工作过程时,你会发现理解起来会更加简单.下面就是一个在实践中应用的R-FCN,它正在从图中检测一个婴儿:</p>
+<p><img alt="" src="../object_detection07.png" /></p>
+<p>我们只用简单地让R-FCN去处理每个region proposal,然后将其切分成子区域,在子区域上反复询问系统:这看起来像是婴儿的<code>上左</code>部分吗,这看起来像是婴儿的<code>上中</code>部分吗,这看起来像是婴儿的<code>上右</code>部分吗,等等.系统会对所有类重复这个过程.如果有足够的子区域表示<code>是的</code>(我的确匹配婴儿的这个部分),那么RoI就会通过对所有类进行softmax回归的方式被分类成一个婴儿.</p>
+<p>借助这种设置,R-FCN便能同时处理位置可变性(location variance)与位置不变性(location invariance).它给出不同的目标区域来处理位置可变性,让每个region proposal都参考同一个分数图score bank来处理位置不变形.这些分数图应该去学习将一只猫分类成猫,而不用管这只猫在在那个位置.最好的是,由于它是全卷积的,所以这意味着网络中所有的计算都是共享的.</p>
+<p>因此,R-FCN比Faster R-CNN快了好几倍,并且可以达到类似的准确率.</p>
+<h2 id="ssd">SSD<a class="headerlink" href="#ssd" title="Permanent link">&para;</a></h2>
+<p>Single-Shot Detector,和R-FCN一样,它的速度比Faster R-CNN要快很多,但其工作方式却和R-FCN存在显著不同.</p>
+<p>我们前两个模型分两个步骤执行region proposal和region classification.首先,它们使用一个region proposal网络来生成感兴趣区域(region of interest);然后,它们既可以用全连接层也可以用位置敏感卷积层来对那些区域进行分类.然而,SSD可以在单个步骤中完成上述两个步骤,并且在处理图像的同时预测边界框和类.</p>
+<p>具体而言,给定一个输入图像以及一系列真值标签,SSD就会进行如下操作:</p>
+<ul>
+<li>在一系列卷积层中传递这个图像,产生一系列大小不同的特征图(如10x10,6x6,3x3等等)</li>
+<li>对每个这些特征图中的每个位置都使用一个<code>3x3</code>的卷积滤波器(convolutional filter)来评估一小部分默认的边界框.这些默认边的界框本质上等价于Faster R-CNN的anchor box</li>
+<li>对每个边界框都同时执行预测:a)边界框的偏移;b)分类的概率</li>
+<li>在训练期间,用这些基于IoU(Intersection over Union,也被称为Jaccard相似系数)系数的预测边界框来匹配正确的边界框.被最佳预测的边界框将被标签为<code>正</code>,并且其它边界框的IoU大于0.5</li>
+</ul>
+<p>SSD的工作方式听上去很直接,但是训练它却会面临一个不一般的挑战.在之前那两个模型那里,region proposal网络可以确保每个我们尝试进行分类的对象都会有一个作为目标的最小概率值.然而,在SSD这里,我们跳过了这个筛选步骤.我们从图像中每个单一位置那里进行分类并画出形状,大小不同的边界框.通过这种办法,我们可以生成比别的模型更多的边界框,但是它们基本上全是负面样本.</p>
+<p>为了解决这个问题,SSD进行了两项处理:</p>
+<ul>
+<li>首先,它使用非极大值抑制(non maximum suppression,NMS)技术来将高度重叠的边界框整合成一个.换句话说,如果有4个形状尺寸等类似的边界框中有同一只狗,那么NMS就会保留信度最高的那个边界框而抛弃掉其它的</li>
+<li>第二,SSD模型使用了一种被称为hard negative mining的技术以在训练过程中让类保持平衡.在hard negative mining中,只有那些有最高训练损失(training loss)的负面样本(negative example)子集才会在每次训练迭代中被使用.SSD的正负比一直保持在<code>1:3</code></li>
+</ul>
+<p>下图是SSD的架构示意图:</p>
+<p><img alt="" src="../object_detection08.png" /></p>
+<p>如上所述,最终有可缩小尺寸的额外特征层.这些尺寸变化的特征图有助于捕捉不同大小的目标.例如,下面是一个正在执行的SSD.</p>
+<p><img alt="" src="../object_detection09.png" /></p>
+<p>在更小的特征图中(比如4x4),每一单元覆盖图像的一个更大区域,使其探测更大的目标.region proposal与分类同时被执行:假设p为目标类别,每个边界框与一个<code>(4+p)</code>维度向量相连接,其输出<code>4</code>个框偏移坐标和<code>p</code>分类概率.在最后一步中,softmax又一次被用来分类目标.</p>
+<p>最终,SSD与最初的两个模型并无不同.它简单跳过region proposal这一步,而不是同时考虑图像每个位置的每个边界及其分类.由于SSD一次性完成所有,它是三个模型中最快的,且相对而言依然表现出色.</p>
+<h2 id="_2">结论<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Faster R-CNN,R-FCN和SSD是三种目前最优且应用最广泛的目标检测模型.其他流行的模型通常与这三者类似,都依赖于深度CNN(如ResNet,Inception等)来进行网络初始化,且大部分遵循同样的proposal/分类pipeline.但是,使用这些模型需要了解Tensorflow的API.Tensorflow有一份使用这些模型的初学者教程.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../models/" title="Models" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  后退
+                </span>
+                Models
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../object_masking/" title="Object masking" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  前进
+                </span>
+                Object masking
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.8eb9be28.js"></script>
+      
+        
+        
+          
+          <script src="../../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          
+            
+          
+            
+              
+                <script src="../../assets/javascripts/lunr/tinyseg.js"></script>
+              
+              
+                <script src="../../assets/javascripts/lunr/lunr.jp.js"></script>
+              
+            
+          
+          
+            <script src="../../assets/javascripts/lunr/lunr.multi.js"></script>
+          
+        
+      
+      <script>app.initialize({version:"0.17.3",url:{base:"../.."}})</script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>
