@@ -1,8 +1,7 @@
 import cv2 as cv
 
-image = cv.imread('tmps/img1.jpg')
-image = cv.imread('tmps/img1.jpg', cv.IMREAD_COLOR) #BGR
-image = cv.imread('tmps/img1.jpg', cv.IMREAD_GRAYSCALE) #GRAY
+
+image = cv.imread('tmps/img1.jpg', cv.IMREAD_UNCHANGED)
 
 rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
