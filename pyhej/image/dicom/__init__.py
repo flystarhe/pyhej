@@ -168,22 +168,23 @@ def update_pixelData(file_path, data, dtype="pixel", savepath=None):
     return ds
 
 
-def display_dir(root, pattern="**/*.dcm", colA="Modality", colB="StudyDescription"):
+def display_dir(root, pattern="**/*.dcm", cols=["Modality", "StudyDescription"]):
     """
-    colA, colB: "Modality", "StudyDescription", "NumberOfFrames"
+    cols: "Modality", "StudyDescription", "NumberOfFrames"
     """
     import os
     import glob
+    import pydicom
     data = []
     filepaths = glob.glob(os.path.join(root, pattern), recursive=True)
     for filepath in sorted(filepaths):
-        plan = dcmread(filepath)
-        data.append([filepath, getattr(plan, colA, None), getattr(plan, colB, None)])
+        plan = pydicom.dcmread(filepath, force=True)
+        data.append([filepath] + [getattr(plan, col, None) for col in cols])
     print("=> {}, counts={}".format(root, len(data)))
     print("import pandas as pd")
-    print("temp = pd.DataFrame(data, columns=['path', 'colA', 'colB'])")
-    print("pd.pivot_table(temp, index='colA', columns='colB', aggfunc='size')")
-    print("temp['colA'].value_counts()")
+    print("temp = pd.DataFrame(data, columns=['path'] + cols)")
+    print("pd.pivot_table(temp, index='col1', columns='col2', aggfunc='size')")
+    print("temp['col1'].value_counts()")
     return data
 
 
@@ -196,6 +197,7 @@ def display_dir_jupyter(root, pattern="**/*.dcm", window=None, attr_name="Modali
     import os
     import glob
     import random
+    import pydicom
     from IPython.display import display
     from pyhej.image import arr2img
     filepaths = glob.glob(os.path.join(root, pattern), recursive=True)
@@ -210,10 +212,10 @@ def display_dir_jupyter(root, pattern="**/*.dcm", window=None, attr_name="Modali
         raise ValueError("Unknown limit:", limit)
     for filepath in filepaths:
         try:
-            plan = dcmread(filepath)
+            plan = pydicom.dcmread(filepath, force=True)
             temp = getattr(plan, attr_name, "None")
             if attr_value is None or temp == attr_value:
-                arr, low, hig = toimage(plan, window)
+                arr, low, hig = toimage(filepath, window)
                 attr_mod = getattr(plan, "Modality", "None")
                 attr_num = getattr(plan, "NumberOfFrames", 1)
                 print("=> {}, modality={}, frames={}, [{},{}]".format(filepath, attr_mod, attr_num, low, hig))
