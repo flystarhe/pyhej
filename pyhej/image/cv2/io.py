@@ -31,6 +31,7 @@ def imread(file_path, flags=None):
 
 
 def imwrite(file_path, image, params=None, dtype="uint8"):
+    # dtype: "uint8" or "uint16"
     # params = (cv.IMWRITE_JPEG_QUALITY, 100)
     # params = (cv.IMWRITE_JPEG_QUALITY, 100, cv.IMWRITE_PNG_COMPRESSION, 0)
     return cv.imwrite(file_path, image.astype(dtype), params)
