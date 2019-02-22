@@ -78,5 +78,5 @@ def dicom_series_to_mha(data_directory, series_id, output_dir=".", output_name="
 def dicom_series_to_jpeg(data_directory, series_id, output_dir="."):
     original_image = read_dicom_series(data_directory, series_id)
     # rescale the image (default is [0,255]) since the JPEG format uint8 pixel type.
-    output_file_names = [os.path.join(output_dir, "slice{0:03d}.jpg".format(i)) for i in range(original_image.GetSize()[2])]
+    output_file_names = [os.path.join(output_dir, "slice{:03d}.jpg".format(i)) for i in range(original_image.GetSize()[2])]
     sitk.WriteImage(sitk.Cast(sitk.RescaleIntensity(original_image), sitk.sitkUInt8), output_file_names)
