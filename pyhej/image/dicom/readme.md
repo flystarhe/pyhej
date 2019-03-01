@@ -4,6 +4,24 @@
 - (0020, 000e) Series Instance UID
 - (0008, 0018) SOP Instance UID
 
+## Keys
+```
+"0010|0010": "Patient name: "
+"0008|0060": "Modality: "
+"0008|0021": "Series date: "
+"0008|0080": "Institution name: "
+"0008|0060": Modality                            CS: 'MR'
+"0008|1030": Study Description                   LO: 'head'
+"0020|0032": Image Position (Patient)            DS: ['4.69394', '-118.101', '119.23']
+"0028|0010": Rows                                US: 1024
+"0028|0011": Columns                             US: 1024
+"0028|0030": Pixel Spacing                       DS: ['0.2344', '0.2344']
+"0028|0106": Smallest Image Pixel Value          SS: 0
+"0028|0107": Largest Image Pixel Value           SS: 1847
+"0028|1050": Window Center                       DS: "923"
+"0028|1051": Window Width                        DS: "1847"
+```
+
 ## Dicom (Pixel Data)
 显示医用灰度图像的相关说明.
 
